@@ -1,0 +1,30 @@
+name: Images CI
+
+on:
+  pull_request:
+    paths:
+      - "zbase/**"
+      - "zdev/**"
+      - "versions.env"
+      - "Makefile"
+      - ".github/workflows/images-*.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: images-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
+      - name: Validate image versions
+        run: bash .github/scripts/release-plan.sh
+      - name: Build zbase and zdev sequentially
+        run: make build
