@@ -31,7 +31,7 @@ the dependent image.
 
 ## Releases
 
-Update the appropriate VERSION file and merge the change into `main`:
+Update `versions.env` and merge the change into `main`:
 
 ```sh
 ZBASE_VERSION=0.2.0
