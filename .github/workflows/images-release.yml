@@ -1,0 +1,114 @@
+name: Release images
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "zbase/**"
+      - "zdev/**"
+      - "versions.env"
+      - ".github/scripts/**"
+      - ".github/workflows/images-release.yml"
+
+permissions:
+  contents: write
+  packages: write
+
+concurrency:
+  group: images-release-main
+  cancel-in-progress: false
+
+env:
+  REGISTRY: ghcr.io/zetaoss
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository and tags
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
+
+      - name: Resolve and validate versions
+        id: release
+        run: bash .github/scripts/release-plan.sh
+
+      - name: Set up Docker Buildx
+        if: steps.release.outputs.release_zbase == 'true' || steps.release.outputs.release_zdev == 'true'
+        uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3
+      - name: Log in to GHCR
+        if: steps.release.outputs.release_zbase == 'true' || steps.release.outputs.release_zdev == 'true'
+        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and publish zbase
+        if: steps.release.outputs.release_zbase == 'true'
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7
+        with:
+          context: ./zbase
+          pull: true
+          push: true
+          platforms: linux/amd64
+          tags: |
+            ${{ env.REGISTRY }}/zbase:${{ steps.release.outputs.zbase_version }}
+            ${{ env.REGISTRY }}/zbase:${{ steps.release.outputs.zbase_minor }}
+            ${{ env.REGISTRY }}/zbase:latest
+            ${{ env.REGISTRY }}/zbase:sha-${{ steps.release.outputs.short_sha }}
+          labels: |
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+            org.opencontainers.image.version=${{ steps.release.outputs.zbase_version }}
+            org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.created=${{ steps.release.outputs.created }}
+            org.opencontainers.image.licenses=Apache-2.0
+          cache-from: type=gha,scope=zbase
+          cache-to: type=gha,mode=max,scope=zbase
+          provenance: mode=max
+          sbom: true
+
+      - name: Build and publish zdev
+        if: steps.release.outputs.release_zdev == 'true'
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7
+        with:
+          context: ./zdev
+          pull: true
+          push: true
+          platforms: linux/amd64
+          build-args: |
+            ZBASE_VERSION=${{ steps.release.outputs.zbase_version }}
+          tags: |
+            ${{ env.REGISTRY }}/zdev:${{ steps.release.outputs.zdev_version }}
+            ${{ env.REGISTRY }}/zdev:${{ steps.release.outputs.zdev_minor }}
+            ${{ env.REGISTRY }}/zdev:latest
+            ${{ env.REGISTRY }}/zdev:sha-${{ steps.release.outputs.short_sha }}
+          labels: |
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+            org.opencontainers.image.version=${{ steps.release.outputs.zdev_version }}
+            org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.created=${{ steps.release.outputs.created }}
+            org.opencontainers.image.licenses=Apache-2.0
+          cache-from: type=gha,scope=zdev
+          cache-to: type=gha,mode=max,scope=zdev
+          provenance: mode=max
+          sbom: true
+
+      - name: Create release tags
+        if: steps.release.outputs.release_zbase == 'true' || steps.release.outputs.release_zdev == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          tags=()
+          if [[ "${{ steps.release.outputs.release_zbase }}" == true ]]; then
+            git tag -a "${{ steps.release.outputs.zbase_tag }}" -m "Release ${{ steps.release.outputs.zbase_tag }}"
+            tags+=("${{ steps.release.outputs.zbase_tag }}")
+          fi
+          if [[ "${{ steps.release.outputs.release_zdev }}" == true ]]; then
+            git tag -a "${{ steps.release.outputs.zdev_tag }}" -m "Release ${{ steps.release.outputs.zdev_tag }}"
+            tags+=("${{ steps.release.outputs.zdev_tag }}")
+          fi
+          git push origin "${tags[@]}"
