@@ -20,6 +20,7 @@ zbase:
 
 zdev:
 	docker build \
+		--build-arg ZBASE_VERSION=$(ZBASE_VERSION) \
 		--tag $(ZDEV_IMAGE):$(ZDEV_VERSION) \
 		--tag $(ZDEV_IMAGE):latest \
 		./zdev

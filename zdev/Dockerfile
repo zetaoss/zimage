@@ -1,8 +1,8 @@
 # syntax=docker/dockerfile:1
 
-# Releases build zbase first, then resolve this stable-channel alias.
-ARG ZBASE_IMAGE=ghcr.io/zetaoss/zbase:latest
-FROM ${ZBASE_IMAGE}
+# Supplied from the repository's versions.env by Make and GitHub Actions.
+ARG ZBASE_VERSION=version-required
+FROM ghcr.io/zetaoss/zbase:${ZBASE_VERSION}
 
 ENV GOPATH=/root/go
 ENV PATH=/usr/local/go/bin:/root/go/bin:/root/.local/share/pnpm/bin:${PATH}

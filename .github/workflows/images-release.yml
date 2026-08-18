@@ -7,6 +7,7 @@ on:
       - "zbase/**"
       - "zdev/**"
       - "versions.env"
+      - ".github/scripts/**"
       - ".github/workflows/images-release.yml"
 
 permissions:
@@ -33,9 +34,6 @@ jobs:
         id: release
         run: bash .github/scripts/release-plan.sh
 
-      - name: Set up QEMU
-        if: steps.release.outputs.release_zbase == 'true' || steps.release.outputs.release_zdev == 'true'
-        uses: docker/setup-qemu-action@c7c53464625b32c7a7e944ae62b3e17d2b600130 # v3
       - name: Set up Docker Buildx
         if: steps.release.outputs.release_zbase == 'true' || steps.release.outputs.release_zdev == 'true'
         uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3
@@ -54,7 +52,7 @@ jobs:
           context: ./zbase
           pull: true
           push: true
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           tags: |
             ${{ env.REGISTRY }}/zbase:${{ steps.release.outputs.zbase_version }}
             ${{ env.REGISTRY }}/zbase:${{ steps.release.outputs.zbase_minor }}
@@ -65,7 +63,7 @@ jobs:
             org.opencontainers.image.version=${{ steps.release.outputs.zbase_version }}
             org.opencontainers.image.revision=${{ github.sha }}
             org.opencontainers.image.created=${{ steps.release.outputs.created }}
-            org.opencontainers.image.licenses=MIT
+            org.opencontainers.image.licenses=Apache-2.0
           cache-from: type=gha,scope=zbase
           cache-to: type=gha,mode=max,scope=zbase
           provenance: mode=max
@@ -78,7 +76,9 @@ jobs:
           context: ./zdev
           pull: true
           push: true
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
+          build-args: |
+            ZBASE_VERSION=${{ steps.release.outputs.zbase_version }}
           tags: |
             ${{ env.REGISTRY }}/zdev:${{ steps.release.outputs.zdev_version }}
             ${{ env.REGISTRY }}/zdev:${{ steps.release.outputs.zdev_minor }}
@@ -89,7 +89,7 @@ jobs:
             org.opencontainers.image.version=${{ steps.release.outputs.zdev_version }}
             org.opencontainers.image.revision=${{ github.sha }}
             org.opencontainers.image.created=${{ steps.release.outputs.created }}
-            org.opencontainers.image.licenses=MIT
+            org.opencontainers.image.licenses=Apache-2.0
           cache-from: type=gha,scope=zdev
           cache-to: type=gha,mode=max,scope=zdev
           provenance: mode=max

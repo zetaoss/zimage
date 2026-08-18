@@ -7,6 +7,7 @@ on:
       - "zdev/**"
       - "versions.env"
       - "Makefile"
+      - ".github/scripts/**"
       - ".github/workflows/images-*.yml"
 
 permissions:

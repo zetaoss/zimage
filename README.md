@@ -9,14 +9,14 @@ Container images for the ZetaOSS MediaWiki development environment.
   on a released `zbase`
 
 The images have independent versions in the root `versions.env` file. `zdev`
-consumes the stable `zbase:latest` channel.
+uses the exact `ZBASE_VERSION` declared in that file.
 
 ## Local builds
 
 The root Makefile reads `versions.env` and builds `zbase` before `zdev`.
 
 ```sh
-# Build zbase:latest and then build zdev from that exact local image.
+# Build the declared zbase version and then build zdev from it.
 make
 
 # Build only one image.
@@ -25,9 +25,9 @@ make zdev
 
 ```
 
-Running `make zdev` by itself uses the currently available
-`ghcr.io/zetaoss/zbase:latest`. Running `make` first replaces that tag locally
-with the freshly built base, so the dependent build is tested without a push.
+Running `make zdev` by itself uses the `ghcr.io/zetaoss/zbase` version declared
+in `versions.env`. Running `make` first builds that base locally before building
+the dependent image.
 
 ## Releases
 
@@ -52,4 +52,5 @@ ghcr.io/zetaoss/zdev:sha-<commit>
 
 If a Dockerfile changes after its current release without the corresponding
 version bump, the release workflow fails. A new zbase also requires a new zdev
-version because changing `zbase:latest` changes the resulting zdev image.
+version because changing the selected zbase version changes the resulting zdev
+image.
