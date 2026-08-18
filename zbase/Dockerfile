@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # https://hub.docker.com/_/mediawiki
-FROM mediawiki:1.43.9-fpm-alpine
+FROM mediawiki:1.46.0-fpm-alpine
 ARG MEDIAWIKI_BRANCH=REL1_43
 
 # https://hub.docker.com/_/composer/tags
