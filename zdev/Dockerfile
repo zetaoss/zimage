@@ -27,18 +27,6 @@ RUN set -eux \
     && echo ok
 
 RUN set -eux \
-    && cd / \
-    && git clone https://github.com/zetaoss/zengine.git app \
-    && cd /app/ \
-    && mv /var/www/html /app/w \
-    && ln -s /app/mwz/extensions/ZetaExtension /app/w/extensions/ \
-    && ln -s /app/mwz/skins/ZetaSkin /app/w/skins/ \
-    && cd /app/svelte/ && pnpm install && pnpm run build \
-    && cd /app/w/skins/ZetaSkin/svelte/ && pnpm install && pnpm run build \
-    && chown www-data:www-data -R /app/* \
-    && echo ok
-
-RUN set -eux \
     && curl -fsSL https://chatgpt.com/codex/install.sh | sh \
     && curl -fsSL https://gh.io/copilot-install | bash \
     && echo ok

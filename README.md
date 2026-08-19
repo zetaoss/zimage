@@ -5,8 +5,8 @@ Container images for the ZetaOSS MediaWiki development environment.
 ## Images
 
 - `ghcr.io/zetaoss/zbase`: MediaWiki runtime and extensions
-- `ghcr.io/zetaoss/zdev`: development tools and the zengine workspace, based
-  on a released `zbase`
+- `ghcr.io/zetaoss/zdev`: development tools based on a released `zbase`;
+  the zengine Git workspace is mounted at runtime and is not part of the image
 
 The images have independent versions in the root `versions.env` file. `zdev`
 uses the exact `ZBASE_VERSION` declared in that file.
