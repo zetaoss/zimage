@@ -4,13 +4,19 @@ include versions.env
 ZBASE_IMAGE := $(REGISTRY)/zbase
 ZDEV_IMAGE := $(REGISTRY)/zdev
 
-.DEFAULT_GOAL := build
+.DEFAULT_GOAL := all
 
-.PHONY: build zbase zdev
+.PHONY: all preflight zbase zbase-test zdev zdev-test
 
 # Keep this order even when make is invoked with parallel jobs.
-build: zbase
+preflight:
+	bash hack/preflight.sh
+
+all: preflight
+	$(MAKE) zbase
+	$(MAKE) zbase-test
 	$(MAKE) zdev
+	$(MAKE) zdev-test
 
 zbase:
 	docker build \
@@ -18,9 +24,23 @@ zbase:
 		--tag $(ZBASE_IMAGE):latest \
 		./zbase
 
+zbase-test:
+	docker build \
+		--build-arg ZBASE_IMAGE=$(ZBASE_IMAGE):$(ZBASE_VERSION) \
+		--file ./zbase/Dockerfile.test \
+		--tag $(ZBASE_IMAGE):$(ZBASE_VERSION)-test \
+		./zbase
+
 zdev:
 	docker build \
 		--build-arg ZBASE_VERSION=$(ZBASE_VERSION) \
 		--tag $(ZDEV_IMAGE):$(ZDEV_VERSION) \
 		--tag $(ZDEV_IMAGE):latest \
+		./zdev
+
+zdev-test:
+	docker build \
+		--build-arg ZDEV_IMAGE=$(ZDEV_IMAGE):$(ZDEV_VERSION) \
+		--file ./zdev/Dockerfile.test \
+		--tag $(ZDEV_IMAGE):$(ZDEV_VERSION)-test \
 		./zdev
