@@ -27,7 +27,6 @@ RUN set -eux \
     && echo ok
 
 RUN set -eux \
-    && curl -fsSL https://antigravity.google/cli/install.sh | bash \
     && curl -fsSL https://chatgpt.com/codex/install.sh | sh \
     && curl -fsSL https://gh.io/copilot-install | bash \
     && echo ok
