@@ -1,0 +1,17 @@
+# syntax=docker/dockerfile:1
+
+ARG ZDEV_IMAGE=ghcr.io/zetaoss/zdev:latest
+FROM ${ZDEV_IMAGE}
+
+RUN php --version
+RUN nginx -v
+RUN go version
+RUN gopls version
+RUN dlv version
+RUN air -v
+RUN node --version
+RUN pnpm --version
+RUN composer --version
+RUN codex --version
+RUN copilot --version
+RUN agy --version

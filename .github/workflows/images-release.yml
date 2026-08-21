@@ -7,6 +7,7 @@ on:
       - "zbase/**"
       - "zdev/**"
       - "versions.env"
+      - "hack/**"
       - ".github/scripts/**"
       - ".github/workflows/images-release.yml"
 
@@ -30,7 +31,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Resolve and validate versions
+      - name: Resolve release plan
         id: release
         run: bash .github/scripts/release-plan.sh
 

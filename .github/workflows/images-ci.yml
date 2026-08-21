@@ -7,6 +7,7 @@ on:
       - "zdev/**"
       - "versions.env"
       - "Makefile"
+      - "hack/**"
       - ".github/scripts/**"
       - ".github/workflows/images-*.yml"
 
@@ -25,7 +26,18 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
-      - name: Validate image versions
+      - name: Resolve release plan
+        id: release
         run: bash .github/scripts/release-plan.sh
-      - name: Build zbase and zdev sequentially
-        run: make build
+      - name: Build zbase
+        if: steps.release.outputs.release_zbase == 'true'
+        run: make zbase
+      - name: Test zbase
+        if: steps.release.outputs.release_zbase == 'true'
+        run: make zbase-test
+      - name: Build zdev
+        if: steps.release.outputs.release_zdev == 'true'
+        run: make zdev
+      - name: Test zdev
+        if: steps.release.outputs.release_zdev == 'true'
+        run: make zdev-test
