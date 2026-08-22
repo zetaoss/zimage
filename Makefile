@@ -6,10 +6,13 @@ ZDEV_IMAGE := $(REGISTRY)/zdev
 
 .DEFAULT_GOAL := checks
 
-.PHONY: checks preflight zbase zdev zdev-test
+.PHONY: checks preflight check-extensions zbase zdev zdev-test
 
 # Keep this order even when make is invoked with parallel jobs.
 preflight:
+	$(MAKE) check-extensions
+
+check-extensions:
 	bash hack/preflight.sh
 
 checks: preflight

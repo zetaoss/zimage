@@ -3,7 +3,7 @@ import { readFileSync, writeFileSync } from 'node:fs';
 const [upstreamFile, localFile, dockerfile] = process.argv.slice(2);
 
 if (!upstreamFile || !localFile || !dockerfile) {
-  throw new Error('usage: node hack/preflight-extensions.mjs <upstream.yaml> <extensions.yaml> <Dockerfile>');
+  throw new Error('usage: node hack/check-extensions.mjs <upstream.yaml> <extensions.yaml> <Dockerfile>');
 }
 
 function yamlValue(value) {
