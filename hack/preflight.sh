@@ -9,7 +9,7 @@ extensions_source_url='https://raw.githubusercontent.com/zetaoss/zengine/main/mw
 extensions_source_file="$(mktemp)"
 trap 'rm -f "$extensions_source_file"' EXIT
 curl --fail --silent --show-error --location "$extensions_source_url" --output "$extensions_source_file"
-node hack/extensions-preflight.mjs "$extensions_source_file" zbase/extensions.yaml zbase/Dockerfile
+node hack/preflight-extensions.mjs "$extensions_source_file" zbase/extensions.yaml zbase/Dockerfile
 
 # shellcheck disable=SC1091
 source versions.env
