@@ -13,6 +13,7 @@ docker run --rm --entrypoint sh "$image" -ec '
   node --version
   pnpm --version
   composer --version
+  gh --version
   codex --version
   copilot --version
   agy --version

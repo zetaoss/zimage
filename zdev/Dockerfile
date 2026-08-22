@@ -41,6 +41,7 @@ RUN set -eux; \
         bash \
         coreutils \
         gcc \
+        gh \
         inotify-tools \
         jq \
         mariadb-client \
