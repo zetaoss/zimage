@@ -14,8 +14,8 @@ RUN set -eux; \
         https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions; \
     chmod +x /usr/local/bin/install-php-extensions; \
     install-php-extensions \
-        pdo_mysql \
         pcntl \
+        pdo_mysql \
         redis \
         wikidiff2 \
         zip
@@ -32,17 +32,19 @@ RUN set -eux \
     && git clone --depth=1 -b $MEDIAWIKI_BRANCH https://gerrit.wikimedia.org/r/mediawiki/extensions/TemplateStyles.git \
     && git clone --depth=1 -b $MEDIAWIKI_BRANCH https://gerrit.wikimedia.org/r/mediawiki/extensions/UserMerge.git \
     && git clone --depth=1 -b $MEDIAWIKI_BRANCH https://gerrit.wikimedia.org/r/mediawiki/extensions/Widgets.git \
-    && git clone --depth=1 -b $MEDIAWIKI_BRANCH https://gerrit.wikimedia.org/r/mediawiki/extensions/Wikibase.git \
-    && echo ok
-
-RUN set -eux \
-    ## mediawiki extensions extra
-    && cd /var/www/html/extensions/ \
+    # auto-generated
     && git clone --depth=1 -b v0.14.0 https://github.com/edwardspec/mediawiki-aws-s3.git                     AWS \
     && git clone --depth=1 -b v4.1.0  https://github.com/StarCitizenWiki/mediawiki-extensions-EmbedVideo.git EmbedVideo \
-    && git clone --depth=1 -b v0.1.1  https://github.com/jmnote/Resend.git                                   Resend \
-    && git clone --depth=1 -b v0.2.1  https://github.com/jmnote/SimpleMaps.git                               SimpleMaps \
-    && git clone --depth=1 -b v0.1.0  https://github.com/jmnote/SimpleMarkdown.git                           SimpleMarkdown \
-    && git clone --depth=1 -b v0.8.11 https://github.com/jmnote/SimpleMathJax.git                            SimpleMathJax \
-    && git clone --depth=1 -b v0.1.2  https://github.com/jmnote/SimpleMermaid.git                            SimpleMermaid \
+    && git clone --depth=1 -b v0.1.0  https://github.com/mailapi/mediawiki-extensions-MailAPI.git            MailAPI \
+    && git clone --depth=1 -b v0.2.2  https://github.com/jmnote/SimpleMaps.git                               SimpleMaps \
+    && git clone --depth=1 -b v0.1.1  https://github.com/jmnote/SimpleMarkdown.git                           SimpleMarkdown \
+    && git clone --depth=1 -b v0.1.3  https://github.com/jmnote/SimpleMermaid.git                            SimpleMermaid \
+    # /auto-generated
     && echo ok
+
+# Composer is mounted only for dependency installation and is not retained in the image.
+RUN --mount=type=bind,from=composer:2.10,source=/usr/bin/composer,target=/usr/local/bin/composer \
+    set -eux; \
+    cd /var/www/html; \
+    mv composer.local.json-sample composer.local.json; \
+    composer update --no-dev --no-scripts --optimize-autoloader

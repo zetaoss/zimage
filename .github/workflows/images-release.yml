@@ -96,9 +96,11 @@ jobs:
           provenance: mode=max
           sbom: true
 
-      - name: Create release tags
+      - name: Create release tags and GitHub releases
         if: steps.release.outputs.release_zbase == 'true' || steps.release.outputs.release_zdev == 'true'
         shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
@@ -113,3 +115,8 @@ jobs:
             tags+=("${{ steps.release.outputs.zdev_tag }}")
           fi
           git push origin "${tags[@]}"
+          for tag in "${tags[@]}"; do
+            gh release create "$tag" \
+              --title "Release $tag" \
+              --generate-notes
+          done

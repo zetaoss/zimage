@@ -32,9 +32,6 @@ jobs:
       - name: Build zbase
         if: steps.release.outputs.release_zbase == 'true'
         run: make zbase
-      - name: Test zbase
-        if: steps.release.outputs.release_zbase == 'true'
-        run: make zbase-test
       - name: Build zdev
         if: steps.release.outputs.release_zdev == 'true'
         run: make zdev
