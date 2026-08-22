@@ -32,17 +32,6 @@ RUN set -eux \
     && git clone --depth=1 -b $MEDIAWIKI_BRANCH https://gerrit.wikimedia.org/r/mediawiki/extensions/TemplateStyles.git \
     && git clone --depth=1 -b $MEDIAWIKI_BRANCH https://gerrit.wikimedia.org/r/mediawiki/extensions/UserMerge.git \
     && git clone --depth=1 -b $MEDIAWIKI_BRANCH https://gerrit.wikimedia.org/r/mediawiki/extensions/Widgets.git \
-    && git clone --depth=1 -b $MEDIAWIKI_BRANCH https://gerrit.wikimedia.org/r/mediawiki/extensions/Wikibase.git \
-    && echo ok
-
-RUN set -eux \
-    ## mediawiki extensions extra
-    && cd /var/www/html/extensions/ \
-    && git clone --depth=1 -b v0.14.0 https://github.com/edwardspec/mediawiki-aws-s3.git                     AWS \
-    && git clone --depth=1 -b v4.1.0  https://github.com/StarCitizenWiki/mediawiki-extensions-EmbedVideo.git EmbedVideo \
-    && git clone --depth=1 -b v0.1.1  https://github.com/jmnote/Resend.git                                   Resend \
-    && git clone --depth=1 -b v0.2.1  https://github.com/jmnote/SimpleMaps.git                               SimpleMaps \
-    && git clone --depth=1 -b v0.1.0  https://github.com/jmnote/SimpleMarkdown.git                           SimpleMarkdown \
-    && git clone --depth=1 -b v0.8.11 https://github.com/jmnote/SimpleMathJax.git                            SimpleMathJax \
-    && git clone --depth=1 -b v0.1.2  https://github.com/jmnote/SimpleMermaid.git                            SimpleMermaid \
+    && git clone --depth=1 -b v0.14.0           https://github.com/edwardspec/mediawiki-aws-s3.git                     AWS \
+    && git clone --depth=1 -b v4.1.0            https://github.com/StarCitizenWiki/mediawiki-extensions-EmbedVideo.git EmbedVideo \
     && echo ok

@@ -4,17 +4,18 @@ include versions.env
 ZBASE_IMAGE := $(REGISTRY)/zbase
 ZDEV_IMAGE := $(REGISTRY)/zdev
 
-.DEFAULT_GOAL := all
+.DEFAULT_GOAL := checks
 
-.PHONY: all preflight zbase zbase-test zdev zdev-test
+.PHONY: checks preflight docs zbase zbase-test zdev zdev-test
 
 # Keep this order even when make is invoked with parallel jobs.
 preflight:
 	bash hack/preflight.sh
 
-all: preflight
+checks: preflight
 	$(MAKE) zbase
 	$(MAKE) zbase-test
+	$(MAKE) docs
 	$(MAKE) zdev
 	$(MAKE) zdev-test
 
@@ -44,3 +45,8 @@ zdev-test:
 		--file ./zdev/Dockerfile.test \
 		--tag $(ZDEV_IMAGE):$(ZDEV_VERSION)-test \
 		./zdev
+
+docs: zbase zbase-test
+	node hack/generate-packages.mjs \
+		$(ZBASE_IMAGE):$(ZBASE_VERSION) \
+		docs/packages.txt
