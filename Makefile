@@ -10,7 +10,7 @@ ZDEV_IMAGE := $(REGISTRY)/zdev
 
 # Keep this order even when make is invoked with parallel jobs.
 preflight:
-	bash hack/preflight.sh
+	node hack/preflight.mjs
 
 checks: preflight
 	$(MAKE) zbase

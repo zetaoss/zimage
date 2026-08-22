@@ -5,7 +5,7 @@ script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 repo_root="$(git -C "$script_dir" rev-parse --show-toplevel)"
 cd "$repo_root"
 
-bash "$repo_root/hack/preflight.sh"
+node "$repo_root/hack/preflight.mjs"
 
 # shellcheck disable=SC1091
 source versions.env

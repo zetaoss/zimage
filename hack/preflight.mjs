@@ -1,10 +1,14 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 
-const [upstreamFile, localFile, dockerfile] = process.argv.slice(2);
+const extensionsSourceUrl = 'https://raw.githubusercontent.com/zetaoss/zengine/main/mwz/extensions/extensions.yaml';
+const localFile = 'zbase/extensions.yaml';
+const dockerfile = 'zbase/Dockerfile';
 
-if (!upstreamFile || !localFile || !dockerfile) {
-  throw new Error('usage: node hack/preflight-extensions.mjs <upstream.yaml> <extensions.yaml> <Dockerfile>');
+const response = await fetch(extensionsSourceUrl);
+if (!response.ok) {
+  throw new Error(`failed to download ${extensionsSourceUrl}: ${response.status} ${response.statusText}`);
 }
+const upstreamContents = await response.text();
 
 function yamlValue(value) {
   const trimmed = value.trim();
@@ -14,11 +18,11 @@ function yamlValue(value) {
   return trimmed;
 }
 
-function parseExtensions(filename) {
+function parseExtensions(contents, filename) {
   const extensions = [];
   let extension;
 
-  for (const line of readFileSync(filename, 'utf8').split(/\r?\n/)) {
+  for (const line of contents.split(/\r?\n/)) {
     const entry = line.match(/^\s*-\s+name:\s*(.+?)\s*$/);
     if (entry) {
       if (extension) extensions.push(extension);
@@ -56,8 +60,8 @@ function compareVersions(left, right) {
   return 0;
 }
 
-const upstream = parseExtensions(upstreamFile);
-const local = parseExtensions(localFile);
+const upstream = parseExtensions(upstreamContents, extensionsSourceUrl);
+const local = parseExtensions(readFileSync(localFile, 'utf8'), localFile);
 const localByName = new Map(local.map((extension) => [extension.name, extension]));
 
 for (const required of upstream) {
@@ -92,4 +96,11 @@ if (start === -1 || end === -1 || end < start) {
 
 const before = contents.slice(0, start + startMarker.length);
 const after = contents.slice(end);
-writeFileSync(dockerfile, `${before}\n${generated}\n${after}`);
+const updatedContents = `${before}\n${generated}\n${after}`;
+
+if (contents !== updatedContents) {
+  writeFileSync(dockerfile, updatedContents);
+  console.log(`Updated ${dockerfile} from ${local.length} configured extensions.`);
+} else {
+  console.log(`Preflight passed: ${local.length} configured extensions satisfy zengine requirements.`);
+}

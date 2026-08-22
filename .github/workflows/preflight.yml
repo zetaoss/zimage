@@ -1,0 +1,20 @@
+name: Preflight
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: preflight-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Run preflight checks
+        run: make preflight
