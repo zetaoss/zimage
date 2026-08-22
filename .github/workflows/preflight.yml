@@ -1,4 +1,4 @@
-name: Check extensions
+name: Preflight
 
 on:
   pull_request:
@@ -7,14 +7,14 @@ permissions:
   contents: read
 
 concurrency:
-  group: check-extensions-${{ github.event.pull_request.number }}
+  group: preflight-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
 jobs:
-  check-extensions:
+  preflight:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - name: Check extensions
-        run: make check-extensions
+      - name: Run preflight checks
+        run: make preflight
