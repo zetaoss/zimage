@@ -31,8 +31,4 @@ zdev:
 		./zdev
 
 zdev-test:
-	docker build \
-		--build-arg ZDEV_IMAGE=$(ZDEV_IMAGE):$(ZDEV_VERSION) \
-		--file ./zdev/Dockerfile.test \
-		--tag $(ZDEV_IMAGE):$(ZDEV_VERSION)-test \
-		./zdev
+	bash zdev/test.sh $(ZDEV_IMAGE):$(ZDEV_VERSION)
