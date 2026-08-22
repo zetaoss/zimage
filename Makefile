@@ -6,7 +6,7 @@ ZDEV_IMAGE := $(REGISTRY)/zdev
 
 .DEFAULT_GOAL := checks
 
-.PHONY: checks preflight zbase zbase-test zdev zdev-test
+.PHONY: checks preflight zbase zdev zdev-test
 
 # Keep this order even when make is invoked with parallel jobs.
 preflight:
@@ -14,7 +14,6 @@ preflight:
 
 checks: preflight
 	$(MAKE) zbase
-	$(MAKE) zbase-test
 	$(MAKE) zdev
 	$(MAKE) zdev-test
 
@@ -22,13 +21,6 @@ zbase:
 	docker build \
 		--tag $(ZBASE_IMAGE):$(ZBASE_VERSION) \
 		--tag $(ZBASE_IMAGE):latest \
-		./zbase
-
-zbase-test:
-	docker build \
-		--build-arg ZBASE_IMAGE=$(ZBASE_IMAGE):$(ZBASE_VERSION) \
-		--file ./zbase/Dockerfile.test \
-		--tag $(ZBASE_IMAGE):$(ZBASE_VERSION)-test \
 		./zbase
 
 zdev:

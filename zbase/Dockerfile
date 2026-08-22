@@ -14,8 +14,8 @@ RUN set -eux; \
         https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions; \
     chmod +x /usr/local/bin/install-php-extensions; \
     install-php-extensions \
-        pdo_mysql \
         pcntl \
+        pdo_mysql \
         redis \
         wikidiff2 \
         zip
@@ -41,3 +41,10 @@ RUN set -eux \
     && git clone --depth=1 -b v0.1.3  https://github.com/jmnote/SimpleMermaid.git                            SimpleMermaid \
     # /auto-generated
     && echo ok
+
+# Composer is mounted only for dependency installation and is not retained in the image.
+RUN --mount=type=bind,from=composer:2.10,source=/usr/bin/composer,target=/usr/local/bin/composer \
+    set -eux; \
+    cd /var/www/html; \
+    mv composer.local.json-sample composer.local.json; \
+    composer update --no-dev --no-scripts --optimize-autoloader
