@@ -6,7 +6,7 @@ ZDEV_IMAGE := $(REGISTRY)/zdev
 
 .DEFAULT_GOAL := checks
 
-.PHONY: checks preflight docs zbase zbase-test zdev zdev-test
+.PHONY: checks preflight zbase zbase-test zdev zdev-test
 
 # Keep this order even when make is invoked with parallel jobs.
 preflight:
@@ -15,7 +15,6 @@ preflight:
 checks: preflight
 	$(MAKE) zbase
 	$(MAKE) zbase-test
-	$(MAKE) docs
 	$(MAKE) zdev
 	$(MAKE) zdev-test
 
@@ -45,8 +44,3 @@ zdev-test:
 		--file ./zdev/Dockerfile.test \
 		--tag $(ZDEV_IMAGE):$(ZDEV_VERSION)-test \
 		./zdev
-
-docs: zbase zbase-test
-	node hack/generate-packages.mjs \
-		$(ZBASE_IMAGE):$(ZBASE_VERSION) \
-		docs/packages.txt
