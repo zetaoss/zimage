@@ -35,11 +35,11 @@ RUN set -eux \
     # auto-generated
     && git clone --depth=1 -b v0.14.0 https://github.com/edwardspec/mediawiki-aws-s3.git                     AWS \
     && git clone --depth=1 -b v4.1.0  https://github.com/StarCitizenWiki/mediawiki-extensions-EmbedVideo.git EmbedVideo \
-    && git clone --depth=1 -b v0.1.0  https://github.com/mailapi/mediawiki-extensions-MailAPI.git            MailAPI \
+    && git clone --depth=1 -b v0.1.1  https://github.com/mailapi/mediawiki-extensions-MailAPI.git            MailAPI \
     && git clone --depth=1 -b v0.2.2  https://github.com/jmnote/SimpleMaps.git                               SimpleMaps \
     && git clone --depth=1 -b v0.1.1  https://github.com/jmnote/SimpleMarkdown.git                           SimpleMarkdown \
     && git clone --depth=1 -b v0.9.0  https://github.com/jmnote/SimpleMathJax.git                            SimpleMathJax \
-    && git clone --depth=1 -b v0.1.3  https://github.com/jmnote/SimpleMermaid.git                            SimpleMermaid \
+    && git clone --depth=1 -b v0.1.4  https://github.com/jmnote/SimpleMermaid.git                            SimpleMermaid \
     # /auto-generated
     && echo ok
 
