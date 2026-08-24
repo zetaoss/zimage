@@ -1,6 +1,6 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 
-const extensionsSourceUrl = 'https://raw.githubusercontent.com/zetaoss/zengine/main/mwz/extensions/extensions.yaml';
+const extensionsSourceUrl = 'https://raw.githubusercontent.com/zetaoss/zengine/main/hack/extensions.yaml';
 const localFile = 'zbase/extensions.yaml';
 const dockerfile = 'zbase/Dockerfile';
 
