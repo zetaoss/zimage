@@ -11,7 +11,6 @@ RUN --mount=type=cache,target=/go/pkg/mod \
     --mount=type=cache,target=/root/.cache/go-build \
     set -eux; \
     GOBIN=/out/bin go install golang.org/x/tools/gopls@latest; \
-    GOBIN=/out/bin go install github.com/go-delve/delve/cmd/dlv@latest; \
     GOBIN=/out/bin go install github.com/air-verse/air@latest
 
 FROM node:24-bookworm-slim AS cli-tools

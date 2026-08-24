@@ -8,7 +8,6 @@ docker run --rm --entrypoint sh "$image" -ec '
   nginx -v
   go version
   gopls version
-  dlv version
   air -v
   node --version
   pnpm --version
