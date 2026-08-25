@@ -27,7 +27,6 @@ RUN set -eux \
     && git clone --depth=1 -b $MEDIAWIKI_BRANCH https://gerrit.wikimedia.org/r/mediawiki/extensions/CheckUser.git \
     && git clone --depth=1 -b $MEDIAWIKI_BRANCH https://gerrit.wikimedia.org/r/mediawiki/extensions/CharInsert.git \
     && git clone --depth=1 -b $MEDIAWIKI_BRANCH https://gerrit.wikimedia.org/r/mediawiki/extensions/intersection.git \
-    && git clone --depth=1 -b $MEDIAWIKI_BRANCH https://gerrit.wikimedia.org/r/mediawiki/extensions/MsUpload.git \
     && git clone --depth=1 -b $MEDIAWIKI_BRANCH https://gerrit.wikimedia.org/r/mediawiki/extensions/Score.git \
     && git clone --depth=1 -b $MEDIAWIKI_BRANCH https://gerrit.wikimedia.org/r/mediawiki/extensions/TemplateStyles.git \
     && git clone --depth=1 -b $MEDIAWIKI_BRANCH https://gerrit.wikimedia.org/r/mediawiki/extensions/UserMerge.git \
@@ -36,6 +35,7 @@ RUN set -eux \
     && git clone --depth=1 -b v0.14.0 https://github.com/edwardspec/mediawiki-aws-s3.git                     AWS \
     && git clone --depth=1 -b v4.1.0  https://github.com/StarCitizenWiki/mediawiki-extensions-EmbedVideo.git EmbedVideo \
     && git clone --depth=1 -b v0.1.1  https://github.com/mailapi/mediawiki-extensions-MailAPI.git            MailAPI \
+    && git clone --depth=1 -b REL1_43 https://gerrit.wikimedia.org/r/mediawiki/extensions/MsUpload.git       MsUpload \
     && git clone --depth=1 -b v0.2.2  https://github.com/jmnote/SimpleMaps.git                               SimpleMaps \
     && git clone --depth=1 -b v0.1.1  https://github.com/jmnote/SimpleMarkdown.git                           SimpleMarkdown \
     && git clone --depth=1 -b v0.9.0  https://github.com/jmnote/SimpleMathJax.git                            SimpleMathJax \
@@ -47,5 +47,5 @@ RUN set -eux \
 RUN --mount=type=bind,from=composer:2.10,source=/usr/bin/composer,target=/usr/local/bin/composer \
     set -eux; \
     cd /var/www/html; \
-    mv composer.local.json-sample composer.local.json; \
+    cp composer.local.json-sample composer.local.json; \
     composer update --no-dev --no-scripts --optimize-autoloader

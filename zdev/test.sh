@@ -4,17 +4,16 @@ set -euo pipefail
 image="${1:?usage: zdev/test.sh <image>}"
 
 docker run --rm --entrypoint sh "$image" -ec '
-  php --version
-  nginx -v
+  air -v
+  agy --version
+  codex --version
+  composer --version
+  copilot --version
+  gh --version
   go version
   gopls version
-  dlv version
-  air -v
+  nginx -v
   node --version
+  php --version
   pnpm --version
-  composer --version
-  gh --version
-  codex --version
-  copilot --version
-  agy --version
 '

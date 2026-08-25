@@ -50,6 +50,7 @@ function versionParts(tag) {
 }
 
 function compareVersions(left, right) {
+  if (left === right) return 0;
   const leftParts = versionParts(left);
   const rightParts = versionParts(right);
   const length = Math.max(leftParts.length, rightParts.length);
