@@ -47,5 +47,5 @@ RUN set -eux \
 RUN --mount=type=bind,from=composer:2.10,source=/usr/bin/composer,target=/usr/local/bin/composer \
     set -eux; \
     cd /var/www/html; \
-    mv composer.local.json-sample composer.local.json; \
+    cp composer.local.json-sample composer.local.json; \
     composer update --no-dev --no-scripts --optimize-autoloader
