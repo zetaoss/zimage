@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # https://hub.docker.com/_/mediawiki
-FROM mediawiki:1.43.9-fpm
+FROM mediawiki:1.45.3-fpm
 ARG MEDIAWIKI_BRANCH=REL1_43
 
 RUN set -eux; \
