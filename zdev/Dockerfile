@@ -13,7 +13,7 @@ RUN --mount=type=cache,target=/go/pkg/mod \
     GOBIN=/out/bin go install golang.org/x/tools/gopls@latest; \
     GOBIN=/out/bin go install github.com/air-verse/air@latest
 
-FROM node:24-bookworm-slim AS cli-tools
+FROM node:26-bookworm-slim AS cli-tools
 
 ENV PATH=/root/.local/bin:${PATH}
 
